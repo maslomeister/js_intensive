@@ -1,6 +1,5 @@
 function cloneFunction(fn) {
-  let fnStr = fn.toString();
-  let fnClone = new Function("return " + fnStr);
+  const fnClone = new Function("return " + fn.toString());
   return fnClone();
 }
 
@@ -20,18 +19,19 @@ function checkObject(obj) {
   return "primitive";
 }
 
-const copyArray = (arr) =>
-  arr.map((item) => {
+function copyArray(arr) {
+  return arr.map((item) => {
     if (Array.isArray(item)) {
       return copyArray(item);
     }
     if (checkObject(item) !== "primitive") {
-      return makeObjectDeepCopy(item);
+      return copyObject(item);
     }
     return item;
   });
+}
 
-function makeObjectDeepCopy(object) {
+function copyObject(object) {
   const objClone = {};
 
   Object.keys(object).forEach((key) => {
@@ -39,7 +39,7 @@ function makeObjectDeepCopy(object) {
 
     switch (checkObject(value)) {
       case "object":
-        objClone[key] = makeObjectDeepCopy(value);
+        objClone[key] = copyObject(value);
         break;
       case "array":
         objClone[key] = copyArray(value);
@@ -61,6 +61,27 @@ function makeObjectDeepCopy(object) {
         break;
     }
   });
-
   return objClone;
+}
+
+/**
+ * Returns deep copy of an object, works with any object
+ * @param object An object
+ */
+function makeObjectDeepCopy(object) {
+  switch (checkObject(object)) {
+    case "object":
+      return copyObject(object);
+    case "array":
+      return copyArray(object);
+    case "function":
+      return cloneFunction(object);
+    case "map":
+      return new Map(copyArray(Array.from(object)));
+    case "set":
+      return new Set(copyArray(Array.from(object)));
+    case "date":
+      return new Date(object);
+      break;
+  }
 }
