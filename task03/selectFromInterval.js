@@ -1,16 +1,14 @@
 function isNumber(item) {
-  return (
-    !isNaN(item) && typeof item !== "string" && item === item && item % 1 === 0
-  );
+  return !isNaN(item) && typeof item !== "string" && !isNaN(parseFloat(item));
 }
 
 function selectFromInterval(array, firstValue, secondValue) {
   if (typeof array !== "object" && !Array.isArray(array)) {
-    throw new Error("Первым параметром ожидался массив целых чисел");
+    throw new Error("Первым параметром ожидался массив чисел");
   }
 
   if (!isNumber(firstValue) || !isNumber(secondValue))
-    throw new Error("Одна или обе границы интервала не являются целым числом");
+    throw new Error("Одна или обе границы интервала не являются числом");
 
   const { firstValue: max, secondValue: min } =
     firstValue > secondValue
@@ -21,7 +19,7 @@ function selectFromInterval(array, firstValue, secondValue) {
     if (isNumber(item)) {
       return min <= item && item <= max ? true : false;
     } else {
-      throw new Error("В массиве должны быть только целые числа");
+      throw new Error("В массиве должны быть только числа");
     }
   });
 }
