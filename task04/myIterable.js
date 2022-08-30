@@ -1,26 +1,22 @@
 Object.prototype[Symbol.iterator] = function () {
+  let start = this.from - 1;
+  const end = this.to;
   if (
-    !(this.from !== undefined && Number.isFinite(this.from)) ||
-    !(this.to !== undefined && Number.isFinite(this.to))
+    !(start !== undefined && Number.isFinite(start)) ||
+    !(end !== undefined && Number.isFinite(end))
   ) {
     throw new Error("Поля from и to должны содержать число");
   }
 
-  if (this.to < this.from) {
+  if (end - 1 < start) {
     throw new Error("Поле from не может быть меньше поля to");
   }
-
-  const arr = Array(this.to - this.from + 1)
-    .fill()
-    .map((_, index) => this.from + index);
-
-  let currIndex = -1;
 
   return {
     next() {
       return {
-        value: arr[++currIndex],
-        done: currIndex >= arr.length,
+        value: ++start,
+        done: start > end,
       };
     },
   };
