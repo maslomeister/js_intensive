@@ -1,11 +1,7 @@
-function isNumber(item) {
-  return typeof item !== "string" && !isNaN(item) && !isNaN(parseFloat(item));
-}
-
 Object.prototype[Symbol.iterator] = function () {
   if (
-    !(this.from !== undefined && isNumber(this.from)) ||
-    !(this.to !== undefined && isNumber(this.to))
+    !(this.from !== undefined && Number.isFinite(this.from)) ||
+    !(this.to !== undefined && Number.isFinite(this.to))
   ) {
     throw new Error("Поля from и to должны содержать число");
   }
